@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Lock</title>
+    <style>
+        html, body {
+            height: 100vh;
+            width: 100vw;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        body {
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            min-width: 100vw;
+            box-sizing: border-box;
+        }
+        .lock-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .heart-lock {
+            width: 520px;
+            height: 40px;
+            background: 
+                radial-gradient(circle at 60% 40%, #ffd1e3 60%, #ffb6c1 100%);
+            position: relative;
+            /* Heart shape using clip-path */
+            clip-path: path('M 260 440 Q 520 320 390 170 Q 520 40 260 120 Q 0 40 130 170 Q 0 320 260 440 Z');
+            box-shadow: 0 12px 48px #f8b6c1a0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            margin-bottom: 0;
+            overflow: visible;
+        }
+        .heart-lock:before {
+            content: '';
+            position: absolute;
+            top: -160px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 260px;
+            height: 260px;
+            border: 24px solid #ffb6c1;
+            border-bottom: none;
+            border-radius: 130px 130px 0 0;
+            background: transparent;
+            z-index: 2;
+            box-sizing: border-box;
+        }
+        .lock-svg {
+            position: relative;
+            width: 900px;
+            height: 1000px;
+            display: block;
+        }
+        .overlay {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        .overlay > * {
+            pointer-events: auto;
+        }
+        .lock-title {
+            position: absolute;
+            top: 530px; /* Move title further down */
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-family: 'Brush Script MT', cursive, sans-serif;
+            font-size: 3em; /* smaller title */
+            color: #c94f7c;
+            pointer-events: none;
+            user-select: none;
+            text-shadow: 0 2px 8px #fff6, 0 1px 0 #fff;
+        }
+        .digits-row {
+            position: absolute;
+            top: 650px; /* Move code boxes further down */
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            justify-content: center;
+            gap: 8px;         /* reduced gap */
+        }
+        .digit-box {
+            background: #fff;
+            border: 3px solid #c94f7c;
+            border-radius: 14px;
+            width: 54px;      /* narrower */
+            height: 100px;    /* shorter */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 12px #c94f7c22;
+        }
+        .arrow-btn {
+            background: none;
+            border: none;
+            font-size: 1.4em; /* smaller arrows */
+            color: #c94f7c;
+            cursor: pointer;
+            user-select: none;
+            transition: color 0.2s;
+            line-height: 1;
+            padding: 0;
+        }
+        .arrow-btn:active {
+            color: #a03a5e;
+        }
+        .digit {
+            font-size: 1.6em; /* smaller numbers */
+            font-family: monospace;
+            margin: 6px 0;
+            color: #c94f7c;
+            font-weight: bold;
+        }
+        .unlocked {
+            margin-top: 30px;
+            font-size: 2em;
+            color: #c94f7c;
+            font-family: 'Brush Script MT', cursive, sans-serif;
+            animation: pop 0.5s;
+        }
+        @keyframes pop {
+            0% { transform: scale(0.7);}
+            80% { transform: scale(1.1);}
+            100% { transform: scale(1);}
+        }
+    </style>
+</head>
+<body>
+    <div class="lock-container" style="position:relative;">
+        <svg class="lock-svg" viewBox="0 0 520 600" style="display:block;">
+            <!-- Shackle -->
+            <path d="M130,160 a130,130 0 1,1 260,0" fill="none" stroke="#ffb6c1" stroke-width="28"/>
+            <!-- Heart body -->
+            <path d="M260,560
+                C 20,400 40,200 260,260
+                C 480,200 500,400 260,560
+                Z"
+                fill="#ffc9dd"
+                stroke="#ffb6c1"
+                stroke-width="6"/>
+        </svg>
+        <div class="overlay">
+            <div class="lock-title">The Day We Got Together</div>
+            <div class="digits-row" id="digitsRow"></div>
+        </div>
+        <div id="unlockMsg"></div>
+    </div>
+    <script>
+        const password = [0,9,1,8,2,3];
+        const digitsRow = document.getElementById('digitsRow');
+        const unlockMsg = document.getElementById('unlockMsg');
+        let digits = [0,0,0,0,0,0];
+
+        function renderDigits() {
+            digitsRow.innerHTML = '';
+            digits.forEach((digit, idx) => {
+                const box = document.createElement('div');
+                box.className = 'digit-box';
+                box.innerHTML = `
+                    <button class="arrow-btn" onclick="changeDigit(${idx}, 1)">&#9650;</button>
+                    <div class="digit" id="digit${idx}">${digit}</div>
+                    <button class="arrow-btn" onclick="changeDigit(${idx}, -1)">&#9660;</button>
+                `;
+                digitsRow.appendChild(box);
+            });
+        }
+
+        window.changeDigit = function(idx, delta) {
+            digits[idx] = (digits[idx] + delta + 10) % 10;
+            renderDigits();
+            checkUnlock();
+        }
+
+        function checkUnlock() {
+            if (digits.every((d, i) => d === password[i])) {
+                unlockMsg.innerHTML = '<div class="unlocked">Unlocked! 💖</div>';
+            } else {
+                unlockMsg.innerHTML = '';
+            }
+        }
+
+        renderDigits();
+    </script>
+</body>
+</html>
