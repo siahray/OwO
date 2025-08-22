@@ -28,7 +28,7 @@
         </div>
     </nav>
 
-
+    <!--First-->
 
     <div class="ask" id="first">
         <div class="main-header">
@@ -43,15 +43,79 @@
         </div>
     </div>
 
-    <div class="ask" id="second" style="display: none;">
+    <!--Second-->
+
+    <div class="ask" id="second">
         <div class="main-header">
             <p>If you're reading this, sorry bebe my gift didn't make it in time... <br>
-            But I'll show you what I ordered for you hehe</p>
+                But I'll show you what I ordered for you hehe</p>
         </div>
+
         <div class="buttons">
-            <button class="yes-btn"><a href="gift.html">>>></a></button>
+            <button type="button" class="no-btn" onclick="showThird()">>>></button>
         </div>
     </div>
+
+    <!--Third-->
+
+    <div class="ask" id="third">
+        <div class="main-header">
+            <p>Ready???</p>
+        </div>
+
+        <div class="buttons">
+            <button type="button" class="no-btn" onclick="showFourth()">>>></button>
+        </div>
+    </div>
+
+    <!--Fourth-->
+
+    <div class="ask" id="fourth">
+        <div class="main-header">
+            <p>3...</p>
+        </div>
+
+        <div class="buttons">
+            <button type="button" class="no-btn" onclick="showFifth()">>>></button>
+        </div>
+    </div>
+
+    <!--Fifth-->
+
+    <div class="ask" id="fifth">
+        <div class="main-header">
+            <p>2...</p>
+        </div>
+
+        <div class="buttons">
+            <button type="button" class="no-btn" onclick="showSixth()">>>></button>
+        </div>
+    </div>
+
+    <!--Sixth-->
+
+    <div class="ask" id="sixth">
+        <div class="main-header">
+            <p>1...</p>
+        </div>
+
+        <div class="buttons">
+            <button type="button" class="no-btn" onclick="showLast()">>>></button>
+        </div>
+    </div>
+
+    <!--Last-->
+
+    <div class="ask" id="last" style="display: none;">
+        <div class="main-header">
+            <p>...</p>
+            <div class="buttons">
+                <button class="yes-btn"><a href="gift.html">>>></a></button>
+            </div>
+        </div>
+    </div>
+
+
 
 </body>
 
