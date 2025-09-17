@@ -113,6 +113,7 @@ body::before {
 
 /* Letter styling*/
 .letter-content {
+    position: relative;
     text-align: left;
     font-family: 'Georgia', serif;
     line-height: 1.6;
@@ -121,8 +122,12 @@ body::before {
     background-color: rgba(255, 255, 255, 0.9);
     border-radius: 10px;
     border-left: 4px solid #adb5bd;
-    max-width: 10000px;
+    max-width: 1000px;
+    height: 400px;
     margin: 0 auto;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #e2b6b6 #f8d3d3;
 }
 
 .letter-content p {
